@@ -1,0 +1,45 @@
+<!--noticias.html-->
+<main>
+    <h2>Noticias de interés del mundo</h2>
+    <div>
+        <div id="contenido-noticias">Noticias</div>
+    </div>
+
+</main>
+
+
+<script>
+
+    const API_KEY = '1f3d70f7eef146a082baa2313fb452bf'; // Mi API de GNews
+    const URL = `https://newsapi.org/v2/top-headlines?country=es&apiKey=${API_KEY}`;
+
+    //Función para llamar noticias al main
+    async function cargarNoticias() {
+        try {
+            const respuesta = await fetch(URL);
+            const datos = await respuesta.json();
+
+            const contenedor = document.getElementById('contenido-noticias');
+            contenedor.innerHTML = '';
+
+            datos.articles.slice(0, 5).forEach(noticia => {
+            const div = document.createElement('div');
+            div.className = 'noticia';
+            div.innerHTML = `
+                <h3>${noticia.title}</h3>
+                <p>${noticia.description || ''}</p>
+                <a href="${noticia.url}" target="_blank">Leer más</a>
+                <hr>
+            `;
+            contenedor.appendChild(div);
+            });
+
+        } catch (error) {
+            console.error('Error al cargar noticias:', error);
+            document.getElementById('contenido-noticias').innerHTML = '<p>Error al cargar noticias.</p>';
+        }
+    }
+
+    window.addEventListener('load', cargarNoticias);
+
+</script>
