@@ -4,7 +4,7 @@
     <form action="">
       <label for="city">Que ciudad quiere consultar:</label><br>
       <input type="text" id="city" name="city"><br>
-      <button onclick="getWeather()">Buscar</button>
+      <button onclick="getWeather()">Tiempo por horas</button>
     </form>
     <div id="weather-result"></div>
 
@@ -19,8 +19,8 @@
       event.preventDefault(); //Previene que el formulario recargue la página
 
       const city = document.getElementById("city").value; //Obtiene el valor de la ciudad que elige
-      const apiKey = "ff0af1c923454ae3b2b70231252205"; // <-- mi API
-      const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&lang=es`; //Esta url es la que consulta
+      let Api_Key = "ff0af1c923454ae3b2b70231252205"; // Mi API
+      const url = `https://api.weatherapi.com/v1/forecast.json?key=${Api_Key}&q=${city}&lang=es`; //Esta url es la que consulta
 
       try {
         const response = await fetch(url); //Hacela solicitud a la URL

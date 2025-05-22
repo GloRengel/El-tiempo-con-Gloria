@@ -14,7 +14,7 @@
 <script>
   async function cargarResumenClima() {
       const ciudad = "Malaga";
-      const apiKey = "ff0af1c923454ae3b2b70231252205";
+      let apiKey = "ff0af1c923454ae3b2b70231252205"; //Mi api
       const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${ciudad}&lang=es&days=1`;
 
       const horasObjetivo = ["00:00", "08:00", "12:00", "18:00"];

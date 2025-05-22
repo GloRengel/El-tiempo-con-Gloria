@@ -1,3 +1,3 @@
 weatherapi: ff0af1c923454ae3b2b70231252205
 
-GNews: 1f3d70f7eef146a082baa2313fb452bf
+NewsApi: 2cf052e128b8400d856c68da4d86e964
