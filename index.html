@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>El_Tiempo_Con_Gloria</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Menú</h1>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="clima.html">Clima</a>
+      <a href="noticias.html">Noticias</a>
+      <a href="acerca.html">Acerca</a>
+      <a href="contacto.html">Contacto</a>
+    </nav>
+  </header>
+  <main>
+    <h2>Resumen del tiempo en horas</h2>
+    <div class="tiempo">
+      <form action="">
+        <label for="city">Que ciudad quiere consultar:</label><br>
+        <input type="text" id="city" name="city"><br>
+        <button onclick="getWeather()">Buscar</button>
+      </form>
+      <div id="weather-result"></div>
+
+      <h2>Resumen por Horas</h2>
+      <div id="resumen-tiempo"></div>
+    </div>
+
+    <div class="Resumen de noticias">
+
+    </div>
+  </main>
+  
+  <script>
+    async function getWeather() { //Llamada a la API
+      event.preventDefault(); //Previene que el formulario recargue la página
+
+      const city = document.getElementById("city").value; //Obtiene el valor de la ciudad que elige
+      const apiKey = "ff0af1c923454ae3b2b70231252205"; // <-- mi API
+      const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&lang=es`; //Esta url es la que consulta
+
+      try {
+        const response = await fetch(url); //Hacela solicitud a la URL
+        const data = await response.json(); //Convierte la respuesta en formato JSON
+
+        if (data.error) { //Consulta si hay algún error y si no es asi, lanza la respuesta
+          document.getElementById("weather-result").innerHTML = `<p>Error: ${data.error.message}</p>`;
+          document.getElementById("resumen-tiempo").innerHTML = '';
+        return;
+        }
+
+        const current = data.current;
+          document.getElementById("weather-result").innerHTML = `
+            <h2>${data.location.name}, ${data.location.country}</h2>
+            <p>Temperatura: ${data.current.temp_c}°C</p>
+            <p>Viento: ${current.wind_kph} km/h desde ${current.wind_dir}</p>
+            <p>Condición: ${current.condition.text}</p>
+            <img src="https:${data.current.condition.icon}" alt="icono clima">
+          `;
+        
+
+        const horasObjetivo = ["00:00", "08:00", "12:00", "18:00"];
+        const horasPronostico = data.forecast.forecastday[0].hour;
+
+        const contenedor = document.getElementById('resumen-tiempo');
+        contenedor.innerHTML = '';
+
+        // Definimos bloques horarios (rango de ±2 hora)
+        const bloques = {
+          "00:00": ["22:00", "00:00", "02:00"],
+          "08:00": ["06:00", "08:00", "10:00"],
+          "12:00": ["10:00", "12:00", "14:00"],
+          "18:00": ["16:00", "18:00", "20:00"]
+        };
+
+        horasObjetivo.forEach(horaClave => {
+          const bloqueHoras = bloques[horaClave];
+
+          // Filtramos las horas dentro del bloque
+          const horasEnBloque = horasPronostico.filter(hora =>
+            bloqueHoras.includes(hora.time.split(' ')[1])
+          );
+
+          // Calculamos temp máxima y mínima
+          const tempMax = Math.max(...horasEnBloque.map(h => h.temp_c));
+          const tempMin = Math.min(...horasEnBloque.map(h => h.temp_c));
+
+          // Usamos la hora central como referencia visual
+          const horaCentral = horasEnBloque.find(h => h.time.split(' ')[1] === horaClave) || horasEnBloque[0];
+
+          const divHora = document.createElement('div');
+          divHora.className = 'hora';
+
+          //Insertamos en el bloque los datos del clima, usando horaCentral para los datos
+          divHora.innerHTML = `
+            <div class="hora-titulo">${horaClave}</div>
+            <div class="icono"><img src="https:${horaCentral.condition.icon}" alt="icono clima" width="50" height="50"></div>
+            <div class="datos">
+              <div>Temperatura máxima: ${tempMax}°C</div>
+              <div>Temperatura mínima: ${tempMin}°C</div>
+              <div>Velocidad del viento: ${horaCentral.wind_kph} km/h</div>
+              <div>Probabilidad de precipitación: ${horaCentral.chance_of_rain}%</div>
+              <div>Condición: ${horaCentral.condition.text}</div>
+            </div>
+          `;
+
+          contenedor.appendChild(divHora);
+        });;
+
+      } catch (error) {
+          document.getElementById("weather-result").innerHTML = `<p>Error en la solicitud</p>`;
+          document.getElementById("resumen-tiempo").innerHTML = '';
+          console.error(error);
+      }
+    }
+  </script>
+</body>
+</html>

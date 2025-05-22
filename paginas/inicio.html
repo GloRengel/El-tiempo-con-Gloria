@@ -1,0 +1,68 @@
+<!--inicio.html-->
+
+<h2>Resumen del tiempo en Málaga</h2>
+  <div class="tiempo">
+      <div id="resumen-tiempo"></div>
+  </div>
+<h2>Resumen de noticias</h2>
+  <div class="Resumen de noticias">
+
+  </div>
+
+<script>
+  async function cargarResumenClima() {
+      const ciudad = "Malaga";
+      const apiKey = "ff0af1c923454ae3b2b70231252205";
+      const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${ciudad}&lang=es&days=1`;
+
+      const horasObjetivo = ["00:00", "08:00", "12:00", "18:00"];
+
+      try {
+          const respuesta = await fetch(url);
+          const data = await respuesta.json();
+
+          const horasPronostico = data.forecast.forecastday[0].hour;
+          const contenedor = document.getElementById('resumen-tiempo');
+          contenedor.innerHTML = `<h2>Resumen clima en Málaga</h2>`;
+
+          // Crear resumen general con max y min de las horas objetivo
+          const horasFiltradas = horasPronostico.filter(h => horasObjetivo.includes(h.time.split(' ')[1]));
+          const tempMax = Math.max(...horasFiltradas.map(h => h.temp_c));
+          const tempMin = Math.min(...horasFiltradas.map(h => h.temp_c));
+
+          const resumenGeneral = document.createElement('div');
+          resumenGeneral.innerHTML = `
+            <p><strong>Temperatura máxima:</strong> ${tempMax}°C</p>
+            <p><strong>Temperatura mínima:</strong> ${tempMin}°C</p>
+          `;
+          contenedor.appendChild(resumenGeneral);
+
+          // Mostrar detalles por cada hora seleccionada
+          horasFiltradas.forEach(hora => {
+            const divHora = document.createElement('div');
+            divHora.className = 'hora';
+
+            divHora.innerHTML = `
+              <div class="hora-titulo">${hora.time.split(' ')[1]}</div>
+              <div class="icono"><img src="https:${hora.condition.icon}" alt="${hora.condition.text}"></div>
+              <div class="datos">
+                <div><strong>Temperatura:</strong> ${hora.temp_c}°C</div>
+                <div><strong>Viento:</strong> ${hora.wind_kph} km/h</div>
+                <div><strong>Probabilidad de lluvia:</strong> ${hora.chance_of_rain}%</div>
+                <div><strong>Estado del cielo:</strong> ${hora.condition.text}</div>
+              </div>
+            `;
+
+            contenedor.appendChild(divHora);
+          });
+
+      } catch (error) {
+          document.getElementById('resumen-tiempo').innerHTML = '<p>Error al cargar el clima.</p>';
+          console.error(error);
+      }
+  }
+
+  // Cargar el resumen al cargar la página
+  window.addEventListener('load', cargarResumenClima);
+
+</script>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>El_Tiempo_Con_Gloria</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- NAV FIJO -->
+  <nav>
+    <a href="#inicio" onclick="cargarPagina('inicio')">Inicio</a>
+    <a href="#clima" onclick="cargarPagina('clima')">Clima</a>
+    <a href="#noticias" onclick="cargarPagina('noticias')">Noticias</a>
+    <a href="#acerca" onclick="cargarPagina('acerca')">Acerca</a>
+    <a href="#contacto" onclick="cargarPagina('contacto')">Contacto</a>
+  </nav>
+
+  <!-- CONTENIDO CAMBIANTE -->
+  <main id="contenido">
+    <!-- Aquí se carga el contenido de cada sección -->
+  </main>
+
+  <script>
+    //Creamos una función para que cargue las páginas de html, pero solo cambiando el contenido del main y el script
+    
+    function cargarPagina(pagina) {
+        const ruta = `paginas/${pagina}.html`;
+
+        fetch(ruta)
+        .then(res => res.text())
+        .then(html => {
+            const contenedor = document.getElementById('contenido');
+
+            // Extraer y separar el <script> si hay
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = html;
+
+            // Quitar scripts del HTML para cargarlos manualmente
+            const scripts = tempDiv.querySelectorAll('script');
+            scripts.forEach(s => s.remove());
+
+            contenedor.innerHTML = tempDiv.innerHTML;
+
+            // Cargar y ejecutar cada script externo
+            scripts.forEach(oldScript => {
+            const newScript = document.createElement('script');
+            if (oldScript.src) {
+                newScript.src = oldScript.src;
+                newScript.async = true;
+            } else {
+                newScript.textContent = oldScript.textContent;
+            }
+            document.body.appendChild(newScript);
+            });
+
+            history.pushState(null, '', `#${pagina}`);
+        })
+        .catch(() => {
+            document.getElementById('contenido').innerHTML = '<p>Error al cargar la página.</p>';
+        });
+    }
+
+        // Cargar al inicio y al navegar
+        window.addEventListener('load', () => {
+            const pagina = location.hash.replace('#', '') || 'inicio';
+            cargarPagina(pagina);
+        });
+
+        window.addEventListener('popstate', () => {
+            const pagina = location.hash.replace('#', '') || 'inicio';
+            cargarPagina(pagina);
+        });
+</script>
+
+  </script>
+</body>
+</html>
+
