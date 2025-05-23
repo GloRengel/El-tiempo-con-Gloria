@@ -1,16 +1,35 @@
 <!--clima.html-->
 <main>
-  <div class="tiempo">
-    <form action="">
-      <label for="city">Que ciudad quiere consultar:</label><br>
-      <input type="text" id="city" name="city"><br>
-      <button onclick="getWeather()">Tiempo por horas</button>
+  <div class="mb-3">
+    <div class="container">
+      <form>
+      <div class="mb-3">
+        <label for="city" class="form-label">Introduce la ciudad que desea consultar</label>
+        <input type="text" class="form-control" id="city">
+      </div>
+      <button onclick="getWeather()" type="submit" class="btn btn-primary">Enviar</button>
     </form>
+    </form>
+    </div>
     <div id="weather-result"></div>
-
-    <h2>Resumen por Horas</h2>
     <div id="resumen-tiempo"></div>
+    <div id="tiempo5"></div>
   </div>
+
+  <br>
+  <br>
+  <br>
+
+<!--Formulario para opciones-->
+  <div class="form-floating">
+  <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+    <option selected>Ciudades disponibles</option>
+    <option value="Malaga">Málaga</option>
+    <option value="Madrid">Madrid</option>
+    <option value="Sevilla">Sevilla</option>
+  </select>
+  <label for="floatingSelect">Elige tu opción </label>
+</div>
 </main>
 
 
@@ -19,7 +38,7 @@
       event.preventDefault(); //Previene que el formulario recargue la página
 
       const city = document.getElementById("city").value; //Obtiene el valor de la ciudad que elige
-      let Api_Key = "ff0af1c923454ae3b2b70231252205"; // Mi API
+      let Api_Key = "5c524952d7154b08895111425252305"; // Mi API
       const url = `https://api.weatherapi.com/v1/forecast.json?key=${Api_Key}&q=${city}&lang=es`; //Esta url es la que consulta
 
       try {
@@ -35,6 +54,7 @@
         const current = data.current;
           document.getElementById("weather-result").innerHTML = `
             <h2>${data.location.name}, ${data.location.country}</h2>
+            <p>Fecha: ${data.location.localtime}</p>
             <p>Temperatura: ${data.current.temp_c}°C</p>
             <p>Viento: ${current.wind_kph} km/h desde ${current.wind_dir}</p>
             <p>Condición: ${current.condition.text}</p>
@@ -81,7 +101,7 @@
             <div class="datos">
               <div>Temperatura máxima: ${tempMax}°C</div>
               <div>Temperatura mínima: ${tempMin}°C</div>
-              <div>Velocidad del viento: ${horaCentral.wind_kph} km/h</div>
+              <div>Velocidad del viento: ${horaCentral.wind_kph} desde ${current.wind_dir} km/h</div>
               <div>Probabilidad de precipitación: ${horaCentral.chance_of_rain}%</div>
               <div>Condición: ${horaCentral.condition.text}</div>
             </div>
@@ -99,35 +119,38 @@
 
 
 
-    async function obtenerPrevision5Dias(ciudad) {
-  const apiKey = 'TU_API';
-  const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${ciudad}&days=5&lang=es`;
+  async function obtenerPrevision5Dias(ciudad) {
+    const apiKey = '5c524952d7154b08895111425252305';
+    const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${ciudad}&days=5&lang=es`;
 
-  try {
-    const respuesta = await fetch(url);
-    const data = await respuesta.json();
+    try {
+      const respuesta = await fetch(url);
+      const data = await respuesta.json();
 
-    if(data.error) {
-      console.error('Error API:', data.error.message);
-      return;
+      if(data.error) {
+        console.error('Error API:', data.error.message);
+        return;
+      }
+
+      const contenedor = document.getElementById('tiempo5');
+      contenedor.innerHTML = '';
+
+      const dias = data.forecast.forecastday;
+      dias.forEach(dia => {
+        console.log(`Fecha: ${dia.date}`);
+        console.log(`Temp máxima: ${dia.day.maxtemp_c} °C`);
+        console.log(`Temp mínima: ${dia.day.mintemp_c} °C`);
+        console.log(`Viento max: ${dia.day.maxwind_kph} km/h`);
+        console.log(`Probabilidad de lluvia: ${dia.day.daily_chance_of_rain} %`);
+        console.log(`Icono: https:${dia.day.condition.icon}`);
+        console.log(`Estado: ${dia.day.condition.text}`);
+        console.log('-----------------------------');
+      });
+    } catch (e) {
+      console.error('Error:', e);
     }
-
-    const dias = data.forecast.forecastday;
-    dias.forEach(dia => {
-      console.log(`Fecha: ${dia.date}`);
-      console.log(`Temp máxima: ${dia.day.maxtemp_c} °C`);
-      console.log(`Temp mínima: ${dia.day.mintemp_c} °C`);
-      console.log(`Viento max: ${dia.day.maxwind_kph} km/h`);
-      console.log(`Probabilidad de lluvia: ${dia.day.daily_chance_of_rain} %`);
-      console.log(`Icono: https:${dia.day.condition.icon}`);
-      console.log(`Estado: ${dia.day.condition.text}`);
-      console.log('-----------------------------');
-    });
-  } catch (e) {
-    console.error('Error:', e);
   }
-}
 
-obtenerPrevision5Dias('Malaga');
+  obtenerPrevision5Dias('Malaga');
 
 </script>

@@ -1,20 +1,63 @@
 <!--contacto.html-->
 
-<h2>Formulario de contacto</h2>
 
-<form action="">
-    <label for="name">Nombre: </label><br>
-    <input type="text" id="name" name="name"><br>
-    <label for="ape">Apellidos: </label><br>
-    <input type="text" id="ape" name="ape"><br>
-    <label for="email">Email: </label><br>
-    <input type="email" id="email" name="email"><br>
-    <label for="phone">Teléfono: </label><br>
-    <input type="tel" id="phone" name="phone" pattern="[0-9]{9}"><br>
-    <label for="mensaje">Mensaje: </label><br>
-    <textarea id="mensaje" name="mensaje" rows="5" cols="40" placeholder="Escribe aquí tu mensaje..."></textarea><br>
-    <button id="bt">Enviar</button>
-</form>
+<div class="container col-xl-10 col-xxl-8 px-4 py-5"> 
+    <div class="row align-items-center g-lg-5 py-5"> 
+        <div class="col-md-10 mx-auto col-lg-8"> 
+            <h1 class="display-4 fw-bold lh-1 text-body-emphasis mb-3 text-center" >
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">Formulario de contacto</font>
+                </font>
+            </h1> 
+            <form class="p-4 p-md-5 border rounded-3 bg-body-tertiary"> 
+                <!--nombre-->
+                <div class="form-floating mb-3"> 
+                    <input type="text" class="form-control" id="floatingInput"> 
+                    <label for="floatingInput">
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">Nombre</font>
+                        </font></label> 
+                </div>
+                <!--apellidos-->
+                <div class="form-floating mb-3"> 
+                    <input type="text" class="form-control" id="floatingInput"> 
+                    <label for="floatingInput">
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">Apellidos</font>
+                        </font></label> 
+                </div>
+                <!--telefono-->
+                <div class="form-floating mb-3"> 
+                    <input type="phone" class="form-control" id="floatingInput"> 
+                    <label for="floatingInput">
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">Teléfono</font>
+                        </font></label> 
+                </div>
+                <!--email-->
+                <div class="form-floating mb-3"> 
+                    <input type="email" class="form-control" id="floatingInput"> 
+                    <label for="floatingInput">
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">Dirección de correo electrónico</font>
+                        </font></label> 
+                </div>
+                <div class="form-floating mb-3"> 
+                    <input type="textarea" class="form-control" id="floatingPassword"> 
+                    <label for="floatingPassword">
+                        <font style="vertical-align: inherit;">
+                            <font style="vertical-align: inherit;">Mensaje</font>
+                        </font></label> 
+                </div> 
+                <button class="w-100 btn btn-lg btn-primary" type="submit">
+                    <font style="vertical-align: inherit;">
+                        <font style="vertical-align: inherit;">Enviar formulario</font>
+                    </font></button> 
+                    
+            </form> 
+        </div> 
+    </div> 
+</div>
 
 <script>
     //Creamos una constante del boton de envio
