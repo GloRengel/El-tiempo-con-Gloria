@@ -11,25 +11,16 @@
     </form>
     </form>
     </div>
-    <div id="weather-result"></div>
+    <div id="weather-result" ></div>
+    <br>
+    <br>
     <div id="resumen-tiempo"></div>
+    <br>
+    <br>
     <div id="tiempo5"></div>
   </div>
 
-  <br>
-  <br>
-  <br>
-
-<!--Formulario para opciones-->
-  <div class="form-floating">
-  <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-    <option selected>Ciudades disponibles</option>
-    <option value="Malaga">Málaga</option>
-    <option value="Madrid">Madrid</option>
-    <option value="Sevilla">Sevilla</option>
-  </select>
-  <label for="floatingSelect">Elige tu opción </label>
-</div>
+ 
 </main>
 
 
@@ -97,7 +88,6 @@
           //Insertamos en el bloque los datos del clima, usando horaCentral para los datos
           divHora.innerHTML = `
             <div class="hora-titulo">${horaClave}</div>
-            <div class="icono"><img src="https:${horaCentral.condition.icon}" alt="icono clima" width="50" height="50"></div>
             <div class="datos">
               <div>Temperatura máxima: ${tempMax}°C</div>
               <div>Temperatura mínima: ${tempMin}°C</div>
@@ -105,6 +95,7 @@
               <div>Probabilidad de precipitación: ${horaCentral.chance_of_rain}%</div>
               <div>Condición: ${horaCentral.condition.text}</div>
             </div>
+            <div class="icono"><img src="https:${horaCentral.condition.icon}" alt="icono clima" width="50" height="50"></div>
           `;
 
           contenedor.appendChild(divHora);
@@ -127,30 +118,40 @@
       const respuesta = await fetch(url);
       const data = await respuesta.json();
 
-      if(data.error) {
+      if (data.error) {
         console.error('Error API:', data.error.message);
+        document.getElementById('tiempo5').innerHTML = `<p>Error: ${data.error.message}</p>`;
         return;
       }
 
       const contenedor = document.getElementById('tiempo5');
-      contenedor.innerHTML = '';
+      contenedor.innerHTML = ''; // Limpiar contenido anterior
 
       const dias = data.forecast.forecastday;
+
       dias.forEach(dia => {
-        console.log(`Fecha: ${dia.date}`);
-        console.log(`Temp máxima: ${dia.day.maxtemp_c} °C`);
-        console.log(`Temp mínima: ${dia.day.mintemp_c} °C`);
-        console.log(`Viento max: ${dia.day.maxwind_kph} km/h`);
-        console.log(`Probabilidad de lluvia: ${dia.day.daily_chance_of_rain} %`);
-        console.log(`Icono: https:${dia.day.condition.icon}`);
-        console.log(`Estado: ${dia.day.condition.text}`);
-        console.log('-----------------------------');
+        const div = document.createElement('div');
+        div.className = 'dia-clima';
+        div.innerHTML = `
+          <h3>${new Date(dia.date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</h3>
+          <img src="https:${dia.day.condition.icon}" alt="${dia.day.condition.text}">
+          <p><strong>Estado:</strong> ${dia.day.condition.text}</p>
+          <p><strong>Temperatura máxima:</strong> ${dia.day.maxtemp_c} °C</p>
+          <p><strong>Temperatura mínima:</strong> ${dia.day.mintemp_c} °C</p>
+          <p><strong>Viento máximo:</strong> ${dia.day.maxwind_kph} km/h</p>
+          <p><strong>Probabilidad de lluvia:</strong> ${dia.day.daily_chance_of_rain} %</p>
+          <hr>
+        `;
+        contenedor.appendChild(div);
       });
+
     } catch (e) {
       console.error('Error:', e);
+      document.getElementById('tiempo5').innerHTML = '<p>Error al cargar los datos del clima.</p>';
     }
   }
 
+  // Llamar a la función al cargar la página
   obtenerPrevision5Dias('Malaga');
 
 </script>
