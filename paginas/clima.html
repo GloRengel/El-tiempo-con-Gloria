@@ -7,7 +7,8 @@
         <label for="city" class="form-label">Introduce la ciudad que desea consultar</label>
         <input type="text" class="form-control" id="city">
       </div>
-      <button onclick="getWeather()" type="submit" class="btn btn-primary">Tiempo por horas</button>
+      <button onclick="getWeather()"  type="submit" class="btn btn-primary">Tiempo por horas</button>
+      <button onclick="obtenerPrevision5Dias()" type="submit" class="btn btn-primary">Previsión 5 días</button>
     </form>
     </form>
     </div>
@@ -17,7 +18,6 @@
     <div id="resumen-tiempo"></div>
     <br>
     <br>
-    <h2>Previsión del Tiempo</h2>
     <div id="tiempo5"></div>
   </div>
 
@@ -26,10 +26,12 @@
 
 
 <script>
+  
   async function getWeather() { //Llamada a la API
       event.preventDefault(); //Previene que el formulario recargue la página
 
-      const city = document.getElementById("city").value; //Obtiene el valor de la ciudad que elige
+       //Obtiene el valor de la ciudad que elige
+      const city = document.getElementById("city").value;
       let Api_Key = "5c524952d7154b08895111425252305"; // Mi API
       const url = `https://api.weatherapi.com/v1/forecast.json?key=${Api_Key}&q=${city}&lang=es`; //Esta url es la que consulta
 
@@ -111,7 +113,7 @@
 
 
 
-  async function obtenerPrevision5Dias(city) {
+  async function obtenerPrevision5Dias() {
     const city = document.getElementById("city").value;
     const apiKey = '5c524952d7154b08895111425252305';
     const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=5&lang=es`;
@@ -153,8 +155,4 @@
       document.getElementById('tiempo5').innerHTML = '<p>Error al cargar los datos del clima.</p>';
     }
   }
-
-  // Llamar a la función al cargar la página
-  obtenerPrevision5Dias('Malaga');
-
 </script>
