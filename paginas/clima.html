@@ -150,6 +150,29 @@
         contenedor.appendChild(div);
       });
 
+      // Mostrar alertas meteorológicas
+    const alertas = data.alert?.alert || data.alerts?.alert || data.alerts || null;
+
+    const alertaDiv = document.createElement('div');
+    alertaDiv.className = 'alertas-clima';
+    alertaDiv.innerHTML = `<h2>Alertas meteorológicas</h2>`;
+
+    if (alertas && alertas.length > 0) {
+      alertas.forEach(alerta => {
+        alertaDiv.innerHTML += `
+          <h3>${alerta.headline || alerta.event || 'Alerta'}</h3>
+          <p><strong>Desde:</strong> ${alerta.date || alerta.date_from || ''}</p>
+          <p><strong>Hasta:</strong> ${alerta.expires || alerta.date_to || ''}</p>
+          <p>${alerta.desc || alerta.description || ''}</p>
+          <hr>
+        `;
+      });
+    } else {
+      alertaDiv.innerHTML += `<p>No hay alertas meteorológicas para esta ubicación.</p>`;
+    }
+
+    contenedor.appendChild(alertaDiv);
+
     } catch (e) {
       console.error('Error:', e);
       document.getElementById('tiempo5').innerHTML = '<p>Error al cargar los datos del clima.</p>';

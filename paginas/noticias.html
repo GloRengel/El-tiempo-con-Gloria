@@ -17,13 +17,14 @@
 
 <script>
 
-    const API_KEY = 'e1a47aaee2ee51cee4ac1b82360c5a5e';
-    const Url = `https://api.mediastack.com/v1/news?access_key=${API_KEY}&languages=es&countries=es&limit=5`;
-
-
+    
 
     //Función para llamar noticias al main
     async function cargarNoticias() {
+
+        const API_KEY = 'e1a47aaee2ee51cee4ac1b82360c5a5e';
+        const Url = `https://api.mediastack.com/v1/news?access_key=${API_KEY}&languages=es&countries=es&limit=5`;
+        
         try {
             const respuesta = await fetch(Url);
             const datos = await respuesta.json();
