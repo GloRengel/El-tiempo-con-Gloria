@@ -1,8 +1,8 @@
 <!--noticias.html-->
 <main>
-    <h2>Noticias de interés del mundo</h2>
+    <h2>Noticias de interés de España</h2>
     <div>
-        <div id="contenido-noticias">Noticias</div>
+        <div id="contenido-noticias"></div>
     </div>
 
     <div class="card" style="width: 18rem;">
@@ -18,8 +18,8 @@
 
 <script>
 
-    let API_KEY = '1f3d70f7eef146a082baa2313fb452bf'; // Mi API de GNews
-    const Url = `https://gnews.io/api/v4/top-headlines?lang=es&country=es&max=5&token=${API_KEY}`;
+    const API_KEY = '1f3d70f7eef146a082baa2313fb452bf'; // Mi API de GNews
+    const Url = `https://gnews.io/api/v4/top-headlines?lang=es&max=5&token=${API_KEY}`;
 
     //Función para llamar noticias al main
     async function cargarNoticias() {

@@ -7,7 +7,7 @@
         <label for="city" class="form-label">Introduce la ciudad que desea consultar</label>
         <input type="text" class="form-control" id="city">
       </div>
-      <button onclick="getWeather()" type="submit" class="btn btn-primary">Enviar</button>
+      <button onclick="getWeather()" type="submit" class="btn btn-primary">Tiempo por horas</button>
     </form>
     </form>
     </div>
@@ -17,6 +17,7 @@
     <div id="resumen-tiempo"></div>
     <br>
     <br>
+    <h2>Previsión del Tiempo</h2>
     <div id="tiempo5"></div>
   </div>
 
@@ -110,9 +111,10 @@
 
 
 
-  async function obtenerPrevision5Dias(ciudad) {
+  async function obtenerPrevision5Dias(city) {
+    const city = document.getElementById("city").value;
     const apiKey = '5c524952d7154b08895111425252305';
-    const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${ciudad}&days=5&lang=es`;
+    const url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${city}&days=5&lang=es`;
 
     try {
       const respuesta = await fetch(url);
@@ -133,6 +135,7 @@
         const div = document.createElement('div');
         div.className = 'dia-clima';
         div.innerHTML = `
+          <h2>${data.location.name}, ${data.location.country}</h2>
           <h3>${new Date(dia.date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</h3>
           <img src="https:${dia.day.condition.icon}" alt="${dia.day.condition.text}">
           <p><strong>Estado:</strong> ${dia.day.condition.text}</p>
