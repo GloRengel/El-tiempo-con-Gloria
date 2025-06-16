@@ -1,30 +1,33 @@
-
-// Reemplaza estas claves con tus claves reales de API
+// Claves API propias
 const WEATHER_API_KEY = "2b16a3c568bf4bdc9d572041251506";
 const GNEWS_API_KEY = "73de273f7e7098192ce0d1d4801532f3";
 
-// Ciudad predeterminada para el clima
-const defaultCity = "Málaga";
+// Ciudad predeterminada
+const city = "Málaga";
 
-// Elementos HTML
+// Elementos para cargar los datos en HTML
 const weatherContainer = document.getElementById("weather");
 const newsContainer = document.getElementById("news");
 
 // Clima por horas específicas
+//Función de buscar las horas y el clima
 async function fetchWeather() {
   try {
     const response = await fetch(
-      `https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${defaultCity}&days=1&aqi=no&alerts=no`
+      //Llama a la API para que nos de el pronostico
+      `https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${city}&days=1&aqi=no&alerts=no`
     );
+    //Convierte la respuesta a JSON
     const data = await response.json();
-    const hours = ["00:00", "08:00", "12:00", "18:00"];
+    //Horas específicas
+    const horas = ["00:00", "08:00", "12:00", "18:00"];
     const forecast = data.forecast.forecastday[0].hour;
-
-    const filteredHours = forecast.filter(h =>
-      hours.includes(h.time.split(" ")[1])
+    //Filtra las horas específicas
+    const horasfiltradas = forecast.filter(h =>
+      horas.includes(h.time.split(" ")[1])
     );
-
-    weatherContainer.innerHTML = filteredHours
+    //Crea el HTML
+    weatherContainer.innerHTML = horasfiltradas
       .map(hour => `
         <div class="card mb-3">
           <div class="card-body">
@@ -38,18 +41,22 @@ async function fetchWeather() {
       `)
       .join("");
   } catch (error) {
+    //Si hay algún error muestra este mensaje
     weatherContainer.innerHTML = "<p>Error al obtener el clima.</p>";
   }
 }
 
 // Noticias de España
+//Función de buscar las noticias
 async function fetchNews() {
   try {
     const response = await fetch(
+      //Llama a la API para buscar noticias en español
       `https://gnews.io/api/v4/top-headlines?lang=es&max=5&apikey=${GNEWS_API_KEY}`
     );
+    //Convierte los datos a JSON
     const data = await response.json();
-
+    //Crea el HTML con las noticias
     newsContainer.innerHTML = data.articles
       .map(article => `
         <div class="card mb-3">
@@ -70,11 +77,12 @@ async function fetchNews() {
       `)
       .join("");
   } catch (error) {
+    //Si ocurre algún error, devuelve ese parrafo
     newsContainer.innerHTML = "<p>Error al obtener las noticias.</p>";
   }
 }
 
-// Ejecutar funciones al cargar la página
+// Ejecuta funciones al cargar la página
 document.addEventListener("DOMContentLoaded", () => {
   fetchWeather();
   fetchNews();

@@ -1,15 +1,20 @@
+//Constante con la API propia
 const GNEWS_API_KEY = "73de273f7e7098192ce0d1d4801532f3";
+//Crea una constante donde se van a cargas las noticias
 const noticiasContainer = document.getElementById("noticias");
 
+
+//Funcion de buscar noticias
 async function fetchNoticias() {
   try {
     const response = await fetch(
+      //Llamada a la API
       `https://gnews.io/api/v4/top-headlines?lang=es&max=5&token=${GNEWS_API_KEY}`
     );
+    //Convierte la respuesta en JSON
     const data = await response.json();
 
-    console.log(data);  // << Revisa aquí la respuesta en consola
-
+    //Comprueba si hay errores y si no hay carga las noticias
     if (data.articles && data.articles.length > 0) {
       noticiasContainer.innerHTML = data.articles
         .map(n => `
@@ -24,12 +29,15 @@ async function fetchNoticias() {
           </div>`)
         .join("");
     } else {
+      //Por si no se encuentran noticias
       noticiasContainer.innerHTML = "<p>No se encontraron noticias.</p>";
     }
   } catch (e) {
+    //Se lanza si hay algún error
     noticiasContainer.innerHTML = "<p>Error al cargar noticias.</p>";
     console.error(e);
   }
 }
 
+//Carga las noticias al cargar la página
 document.addEventListener("DOMContentLoaded", fetchNoticias);
